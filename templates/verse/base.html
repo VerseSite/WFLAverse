@@ -1,0 +1,60 @@
+{% load static %}
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>{% block title %}{{ site_name }}{% endblock %}</title>
+  <link rel="icon" type="image/svg+xml" href="{% static 'verse/mark.svg' %}">
+  <link rel="stylesheet" href="{% static 'verse/utilities.css' %}">
+  <link rel="stylesheet" href="{% static 'verse/theme.css' %}">
+  <link rel="stylesheet" href="{% static 'verse/integration.css' %}">
+  <script src="{% static 'verse/ui.js' %}" defer></script>
+  {% block scripts %}{% endblock %}
+</head>
+<body>
+  <a href="#main" class="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[200] btn btn-primary">跳至正文</a>
+  <div class="noise" aria-hidden="true"></div>
+  <header class="topbar">
+    <div class="wrap"><div class="navshell glass">
+      <a href="{% url 'home' %}" class="nav-brand mr-auto" aria-label="{{ site_name }} 首页">{% include 'verse/components/brand.html' %}</a>
+      <nav class="hidden md:flex items-center gap-1" aria-label="主导航">
+        <a class="navlink" href="{% url 'home' %}">首页</a>
+        <a class="navlink" href="{% url 'members' %}">同学资料</a>
+        <a class="navlink" href="{% url 'home' %}#modules">校园模块</a>
+      </nav>
+      <div class="flex items-center gap-1 sm:gap-2">
+        <button type="button" class="icon-btn" id="theme-toggle" aria-label="切换明暗主题" aria-pressed="false">{% include 'verse/components/icon.html' with name='sun' %}</button>
+        {% if user.is_authenticated %}
+          <a class="btn btn-soft btn-sm" href="{% url 'account' %}">{% include 'verse/components/icon.html' with name='user' %}<span class="hidden sm:inline">我的账号</span></a>
+          {% if user.is_staff %}<a class="btn btn-ghost btn-sm hidden sm:inline-flex" href="{% url 'admin:index' %}">管理后台</a>{% endif %}
+          <form action="{% url 'logout' %}" method="post">{% csrf_token %}<button class="icon-btn" type="submit" aria-label="退出登录">{% include 'verse/components/icon.html' with name='logout' %}</button></form>
+        {% else %}
+          <a href="{% url 'login' %}" class="btn btn-ghost btn-sm">登录</a>
+          <a href="{% url 'register' %}" class="btn btn-shimmer btn-sm">注册</a>
+        {% endif %}
+      </div>
+    </div></div>
+  </header>
+  <main id="main" tabindex="-1" class="relative z-[2] min-h-[70vh]">
+    {% if messages %}<div class="wrap pt-4" role="status">{% for message in messages %}<p class="verse-notice glass">{{ message }}</p>{% endfor %}</div>{% endif %}
+    {% block content %}{% endblock %}
+  </main>
+  <footer class="wrap relative z-[2] pt-8 pb-28 md:pb-10">
+    <div class="glass rounded-[40px] p-7 md:p-10 flex flex-wrap justify-between gap-8">
+      <div>{% include 'verse/components/brand.html' %}<p class="text-[13px] muted mt-4 max-w-sm">学生共建的校园空间，让想法与行动在这里相遇。</p></div>
+      <nav aria-label="页脚导航" class="flex flex-wrap items-start gap-5 text-[13px] muted">
+        <a href="{% url 'members' %}">同学资料</a><a href="{% url 'forgot-password' %}">账号帮助</a>
+        {% if user.is_staff %}<a href="{% url 'admin:index' %}">管理后台</a>{% endif %}
+      </nav>
+      <div class="w-full text-[12px] faint border-t hair pt-5">© {% now 'Y' %} {{ site_name }} · 由 C Society 与学生贡献者共同建设</div>
+    </div>
+  </footer>
+  <nav class="dock glass md:hidden" aria-label="移动导航">
+    <a href="{% url 'home' %}" class="dock-item">{% include 'verse/components/icon.html' with name='home' %}<span>首页</span></a>
+    <a href="{% url 'members' %}" class="dock-item">{% include 'verse/components/icon.html' with name='users' %}<span>同学</span></a>
+    <a href="{% url 'home' %}#modules" class="dock-item">{% include 'verse/components/icon.html' with name='cube' %}<span>模块</span></a>
+    <a href="{% url 'account' %}" class="dock-item">{% include 'verse/components/icon.html' with name='user' %}<span>我的</span></a>
+  </nav>
+</body>
+</html>

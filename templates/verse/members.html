@@ -1,0 +1,20 @@
+{% extends 'verse/base.html' %}{% load static %}
+{% block title %}{% if member %}{{ member.real_name }}{% else %}同学资料{% endif %} · {{ site_name }}{% endblock %}
+{% block content %}
+<section class="wrap py-10 md:py-16">
+  {% if member %}
+    <a href="{% url 'members' %}" class="text-[13px] muted inline-flex items-center gap-2 mb-7">{% include 'verse/components/icon.html' with name='left' %}返回同学资料</a>
+    <article class="glass rounded-[40px] overflow-hidden max-w-3xl mx-auto">
+      <div class="verse-profile-cover h-[160px] relative"><img src="{% static 'verse/island.svg' %}" width="220" alt="" class="absolute right-4 bottom-0"></div>
+      <div class="p-7 md:p-10 -mt-16 relative"><span class="verse-avatar verse-avatar-large">{{ member.real_name|slice:':1' }}</span><h1 class="display text-[36px] md:text-[48px] mt-6 break-words">{{ member.real_name }}</h1><p class="text-accent mt-3">{{ member.class_name }}</p><div class="divider my-7"></div><p class="verse-bio muted">{{ member.bio|default:'暂未填写简介' }}</p></div>
+    </article>
+  {% else %}
+    <div class="eyebrow mb-3">Meet your campus</div><h1 class="display h-lg">在校园里，<em>找到同频的人。</em></h1><p class="lead mt-5">每一个名字背后，都有不同的兴趣与想法。这里公开展示同学的姓名、班级和简介。</p>
+    <div class="flex justify-between items-center gap-4 mt-9 mb-6"><span class="tag sky">{{ page_obj.paginator.count }} 位同学</span>{% if not user.is_authenticated %}<a href="{% url 'register' %}" class="btn btn-ghost btn-sm">加入我们</a>{% endif %}</div>
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">{% for member in page_obj %}{% include 'verse/components/member_card.html' %}{% empty %}<div class="glass island p-10 sm:col-span-2 lg:col-span-3 text-center"><span class="mi mx-auto">{% include 'verse/components/icon.html' with name='users' %}</span><h2 class="h3 mt-5">校园空间，等待你的加入。</h2><p class="muted text-[14px] mt-3">还没有同学注册。</p></div>{% endfor %}</div>
+    <nav aria-label="分页" class="flex items-center justify-center gap-5 mt-9 text-[14px]">
+      {% if page_obj.has_previous %}<a class="btn btn-ghost btn-sm" href="?page={{ page_obj.previous_page_number }}">上一页</a>{% endif %}<span class="muted">第 {{ page_obj.number }} / {{ page_obj.paginator.num_pages }} 页</span>{% if page_obj.has_next %}<a class="btn btn-ghost btn-sm" href="?page={{ page_obj.next_page_number }}">下一页</a>{% endif %}
+    </nav>
+  {% endif %}
+</section>
+{% endblock %}

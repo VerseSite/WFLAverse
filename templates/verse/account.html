@@ -1,0 +1,31 @@
+{% extends 'verse/base.html' %}{% load static %}
+{% block title %}{% if panel == 'password' %}修改密码{% else %}我的账号{% endif %} · {{ site_name }}{% endblock %}
+{% block content %}
+<section class="wrap pt-8 pb-16">
+  <div class="verse-profile-cover rounded-[40px] relative overflow-hidden h-[160px] md:h-[210px]"><img src="{% static 'verse/island.svg' %}" width="230" alt="" class="absolute right-6 -bottom-4 opacity-80 float-y"></div>
+  <div class="px-4 md:px-8 -mt-9 relative"><span class="verse-avatar verse-avatar-large">{{ user.real_name|slice:':1' }}</span><h1 class="display text-[36px] md:text-[46px] mt-5">{{ user.real_name }}</h1><p class="muted mt-3">{{ user.class_name|default:'管理员' }} · {% if user.is_staff %}管理员{% else %}学生{% endif %}</p></div>
+  <div class="grid lg:grid-cols-[240px_1fr] gap-6 mt-8">
+    <nav aria-label="账号设置" class="glass island p-2 self-start grid gap-1">
+      <a class="side-link" href="{% url 'account' %}"{% if panel != 'password' %} aria-current="page"{% endif %}>{% include 'verse/components/icon.html' with name='user' %}个人资料</a>
+      <a class="side-link" href="{% url 'password' %}"{% if panel == 'password' %} aria-current="page"{% endif %}>{% include 'verse/components/icon.html' with name='lock' %}修改密码</a>
+      <a class="side-link" href="{% url 'forgot-password' %}">{% include 'verse/components/icon.html' with name='info' %}账号帮助</a>
+      {% if user.is_staff %}<a class="side-link" href="{% url 'admin:index' %}">{% include 'verse/components/icon.html' with name='shield' %}管理后台</a>{% else %}<a class="side-link" href="{% url 'member' user.pk %}">{% include 'verse/components/icon.html' with name='eye' %}我的公开资料</a>{% endif %}
+      <form method="post" action="{% url 'logout' %}">{% csrf_token %}<button class="side-link w-full" type="submit">{% include 'verse/components/icon.html' with name='logout' %}退出登录</button></form>
+    </nav>
+    <div class="glass island p-6 md:p-10 min0">
+      {% if panel == 'password' %}
+        <div class="eyebrow mb-3">Account security</div><h2 class="h2">修改密码</h2><p class="muted text-[14px] mt-4">修改后保留当前登录，其他设备需要重新登录。</p>
+      {% else %}
+        <div class="eyebrow mb-3">Your corner of campus</div><h2 class="h2">个人资料</h2>
+        <dl class="grid sm:grid-cols-2 gap-5 mt-8 text-[14px]">
+          <div><dt class="muted">真实姓名 · 公开</dt><dd class="font-semibold mt-1">{{ user.real_name }}</dd></div>
+          <div><dt class="muted">班级 · 公开</dt><dd class="font-semibold mt-1">{{ user.class_name|default:'—' }}</dd></div>
+          <div><dt class="muted">手机号 · 仅本人和管理员</dt><dd class="font-semibold mt-1">{{ user.phone }}</dd></div>
+          <div><dt class="muted">学号 · 仅本人和管理员</dt><dd class="font-semibold mt-1">{{ user.student_id|default:'—' }}</dd></div>
+        </dl><p class="hint mt-5">姓名、班级、手机号或学号需要更正时，请联系管理员。个人简介向所有访客公开。</p><div class="divider my-7"></div>
+      {% endif %}
+      <form method="post" class="verse-form grid gap-5 max-w-xl mt-6">{% csrf_token %}{% include 'verse/components/form.html' %}<button type="submit" class="btn btn-primary justify-self-start">{% if panel == 'password' %}修改密码{% else %}保存简介{% endif %}{% include 'verse/components/icon.html' with name='check' %}</button></form>
+    </div>
+  </div>
+</section>
+{% endblock %}

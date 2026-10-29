@@ -1,0 +1,9 @@
+{
+  "name": "wfla-verse-frontend",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Build local static assets for the Django WFLA VERSE frontend",
+  "scripts": { "build": "node scripts/build-frontend.cjs" },
+  "devDependencies": { "tailwindcss": "3.4.17", "three": "0.128.0" },
+  "packageManager": "pnpm@11.25.0"
+}

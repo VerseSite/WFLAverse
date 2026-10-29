@@ -1,0 +1,36 @@
+{% extends 'verse/base.html' %}{% load static %}
+{% block scripts %}<script src="{% static 'verse/vendor/three.min.js' %}" defer></script><script src="{% static 'verse/campus.js' %}" defer></script>{% endblock %}
+{% block content %}
+<section class="wrap relative pt-6 md:pt-10 pb-12">
+  <div class="hero-blobs" aria-hidden="true"><span class="blob" style="width:460px;height:460px;background:var(--lav);left:2%;top:120px;opacity:.4"></span><span class="blob" style="width:420px;height:420px;background:var(--sky);right:4%;top:260px;opacity:.3"></span></div>
+  <div class="grid lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] gap-6 items-center relative">
+    <div class="relative z-[3] min0 py-8">
+      <div class="inline-flex items-center gap-2 glass rounded-full pl-1.5 pr-4 py-1.5 text-[12px] mb-7"><span class="tag">学生共建</span>让每一个想法找到同行者</div>
+      <h1 class="display h-xl">你的校园，<br><span class="grad-text">不止一个维度。</span></h1>
+      <p class="lead mt-7">一个属于学生的校园空间。认识同学、分享兴趣，也为未来的竞赛组队、社团招募和校园创作留出更多可能。</p>
+      <div class="flex flex-wrap gap-3 mt-8">
+        {% if user.is_authenticated %}<a href="{% url 'account' %}" class="btn btn-shimmer">{% include 'verse/components/icon.html' with name='user' %}我的账号</a>{% else %}<a href="{% url 'register' %}" class="btn btn-shimmer">加入校园{% include 'verse/components/icon.html' with name='arrow' %}</a>{% endif %}
+        <a href="{% url 'members' %}" class="btn btn-ghost">认识同学{% include 'verse/components/icon.html' with name='users' %}</a>
+      </div>
+      <div class="mt-10 flex items-center gap-4"><span class="display text-[40px] tnum">{{ student_count }}</span><span class="text-[13px] muted">位同学已加入<br><span class="faint">一起建设我们的校园空间</span></span></div>
+    </div>
+    <div class="relative min0">
+      <div class="campus-stage h-[350px] sm:h-[460px] lg:h-[600px]" id="hero-campus" style="background:radial-gradient(ellipse at 50% 40%,rgba(255,255,255,.55),transparent 70%)">
+        <div class="campus-fallback p-8"><img src="{% static 'verse/island.svg' %}" width="360" alt="悬浮校园岛插画"></div>
+      </div>
+      <p class="glass rounded-full mx-auto w-fit px-4 py-2 text-[12px] muted relative -mt-6">校园概念岛 · 拖动旋转，点击建筑探索模块</p>
+    </div>
+  </div>
+</section>
+<section class="wrap py-10 md:py-16" id="modules">
+  <div class="eyebrow mb-3">Campus, connected</div><h2 class="h2 mb-8">校园里的可能，<em>从这里开始。</em></h2>
+  <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+    <a href="{% url 'members' %}" class="glass island magic card-hover p-6 flex flex-col gap-6" style="background:linear-gradient(145deg,var(--lav-soft),var(--surface))"><span class="flex justify-between items-center"><span class="mi">{% include 'verse/components/icon.html' with name='users' %}</span><span class="status st-open">已开放</span></span><span><h3 class="h3 text-[24px]">同学资料</h3><p class="muted text-[14px] mt-2">找到同学，了解彼此的班级、兴趣与想法。</p></span></a>
+    {% for module in upcoming_modules %}<article class="glass island p-6 flex flex-col gap-6"><span class="flex justify-between items-center"><span class="mi">{% include 'verse/components/icon.html' with name=module.icon %}</span><span class="status st-future">筹备中</span></span><span><h3 class="h3 text-[24px]">{{ module.name }}</h3><p class="muted text-[14px] mt-2">{{ module.description }}</p></span></article>{% endfor %}
+  </div>
+</section>
+<section class="wrap py-10 md:py-16">
+  <div class="flex flex-wrap gap-5 items-end justify-between mb-8"><div><div class="eyebrow mb-3">People, not profiles</div><h2 class="h2">在这里，<em>认识彼此。</em></h2></div><a href="{% url 'members' %}" class="btn btn-ghost btn-sm">全部同学{% include 'verse/components/icon.html' with name='arrow' %}</a></div>
+  <div class="grid md:grid-cols-3 gap-4">{% for member in recent_members %}{% include 'verse/components/member_card.html' %}{% empty %}<div class="soft p-8 md:col-span-3"><p class="muted">还没有同学加入。成为第一个，让校园空间开始生长。</p></div>{% endfor %}</div>
+</section>
+{% endblock %}

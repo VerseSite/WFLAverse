@@ -1,0 +1,30 @@
+{% extends 'verse/base.html' %}{% load static %}
+{% block title %}{% if auth_mode == 'login' %}登录{% elif auth_mode == 'register' %}注册{% else %}找回密码{% endif %} · {{ site_name }}{% endblock %}
+{% block content %}
+<section class="wrap py-8 md:py-14"><div class="grid lg:grid-cols-[1.05fr_1fr] gap-5 items-stretch">
+  <aside class="verse-auth-art relative overflow-hidden rounded-[40px] p-8 md:p-12 flex flex-col justify-between">
+    <div class="relative">{% include 'verse/components/brand.html' %}</div>
+    <div class="verse-auth-island-wrap relative grid place-items-center my-8"><img src="{% static 'verse/island.svg' %}" width="280" height="210" class="verse-auth-island float-y" alt="悬浮校园岛插画"></div>
+    <div class="relative"><h2 class="display text-[clamp(32px,4.6vw,58px)]">Your Campus, in <em>More Dimensions.</em></h2><p class="mt-4 text-[14px]">一个由学生参与建设的校园空间。</p></div>
+  </aside>
+  <div class="glass rounded-[40px] p-7 md:p-12 flex flex-col justify-center min0"><div class="max-w-md w-full mx-auto">
+    {% if auth_mode == 'forgot' %}
+      <div class="eyebrow mb-3">Account support</div><h1 class="display text-[40px]">找回密码</h1>
+      <p class="muted mt-6">{{ admin_contact }}</p><p class="muted mt-4 text-[14px]">管理员将协助重置密码。拿到新密码后，请登录并修改密码。</p>
+      <a href="{% url 'login' %}" class="btn btn-primary mt-8">返回登录{% include 'verse/components/icon.html' with name='arrow' %}</a>
+    {% else %}
+      <div class="eyebrow mb-3">{% if auth_mode == 'login' %}Welcome back{% else %}Your campus starts here{% endif %}</div>
+      <h1 class="display text-[40px]">{% if auth_mode == 'login' %}欢迎回来{% else %}创建学生账号{% endif %}</h1>
+      <p class="muted mt-4 text-[14px]">{% if auth_mode == 'login' %}使用手机号和密码，回到你的校园空间。{% else %}填写手机号、八位学号、真实姓名和班级。姓名、班级和简介将向所有访客公开。{% endif %}</p>
+      <form method="post" class="verse-form grid gap-5 mt-8">
+        {% csrf_token %}{% include 'verse/components/form.html' %}
+        {% if auth_mode == 'login' and next %}<input type="hidden" name="next" value="{{ next }}">{% endif %}
+        <button type="submit" class="btn btn-shimmer justify-center h-12">{% if auth_mode == 'login' %}登录{% else %}注册并登录{% endif %}{% include 'verse/components/icon.html' with name='arrow' %}</button>
+      </form>
+      {% if auth_mode == 'login' %}<p class="mt-5 text-[13px] text-right"><a href="{% url 'forgot-password' %}" class="text-accent">忘记密码？联系管理员</a></p>{% endif %}
+      <div class="divider my-7"></div><p class="text-[14px] muted text-center">{% if auth_mode == 'login' %}还没有账号？<a href="{% url 'register' %}" class="text-accent font-semibold">创建账号</a>{% else %}已有账号？<a href="{% url 'login' %}" class="text-accent font-semibold">返回登录</a>{% endif %}</p>
+      <a href="{% url 'home' %}" class="btn btn-ghost justify-center w-full mt-4">以访客身份浏览</a>
+    {% endif %}
+  </div></div>
+</div></section>
+{% endblock %}

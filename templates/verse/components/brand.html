@@ -1,0 +1,5 @@
+{% load static %}
+<span class="brand inline-flex items-center gap-2" translate="no">
+  <img src="{% static 'verse/mark.svg' %}" width="42" height="42" alt="" class="shrink-0">
+  {% if site_name == 'WFLA VERSE' %}<span class="wordmark text-[24px]">wfla <em class="wm-verse">verse</em></span>{% else %}<span class="wordmark text-[22px]">{{ site_name }}</span>{% endif %}
+</span>

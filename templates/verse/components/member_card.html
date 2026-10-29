@@ -1,0 +1,3 @@
+<a href="{% url 'member' member.pk %}" class="glass island p-6 card-hover magic block min0">
+  <span class="verse-avatar">{{ member.real_name|slice:':1' }}</span><h2 class="h3 mt-5 break-words">{{ member.real_name }}</h2><p class="text-[13px] text-accent mt-1">{{ member.class_name }}</p><p class="muted text-[14px] mt-4 verse-bio line-clamp-3">{{ member.bio|default:'暂未填写简介' }}</p>
+</a>
